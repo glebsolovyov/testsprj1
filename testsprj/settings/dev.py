@@ -1,7 +1,6 @@
-from pathlib import Path
+from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 DEBUG = True
 
