@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+    Tests list
+{% endblock %}
+
+{% block content %}
+
+    {% for row in rows %}
+        <a href="{% url 'test_solution_url' %}?id={{ row.id }}">Решить</a>
+        <a href="{% url 'check_test' %}?id={{ row.id }}">Результаты</a>
+        {{ row.test_name }}
+        {{ answ.correct_user_answers }}
+    {% endfor %}
+
+{% endblock %}

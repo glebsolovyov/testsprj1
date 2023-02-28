@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}
+    Test solution
+{% endblock %}
+{% block content %}
+    <form action="{% url 'test_solution_url' %}?id={{ rows.id }}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="questions_count" value="{{ rows.questions_count }}">
+        {{ rows.test_name }}
+        {% for i in rows.questions %}
+            {{ i.question }}
+            {% for a in i.answers %}
+                {% for k, v in a.items %}
+                    {% if 'answer[' in k %}
+                        {{ v }}
+                    {% endif %}
+                    {% if 'answer_id' in k %}
+                        <input type="checkbox" name="user_answer-{{ v }}" value="{{ v }}">
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    <button type="submit">Создать</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+    Test create
+{% endblock %}
+{% block content %}
+    <form action="{% url 'test_create_url' %}" method="post" id="test_form">
+    {% csrf_token %}
+
+        <input type="hidden" name="questions-count" id="questions-count">
+    <label>
+    <input name="test_name">
+    </label>
+        <div id="questions"></div>
+        <button type="button" id="add" class="btn btn-primary">Добавить вопрос</button>
+    <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+    {% block script %}
+    <script>
+        var add = document.getElementById('add');
+        var form = document.getElementById('test_form');
+        var questions_count = 0;
+        add.addEventListener('click', function (){
+            var div = document.createElement('div');
+            div.id = 'question' + questions_count;
+            div.innerHTML = '<input name="question-' + questions_count + '"><br><br>' +
+                '<input name="answer[0][' + questions_count + ']"><br><br>' +
+                '<input name="answer[1][' + questions_count + ']"><br><br>' +
+                '<input name="answer[2][' + questions_count + ']"><br><br>' +
+                '<input name="answer[3][' + questions_count + ']"><br><br>' +
+                '<input type="checkbox" value="0" name="is_correct[0][' + questions_count + ']"<br><br>' +
+                '<input type="checkbox" value="0" name="is_correct[1][' + questions_count + ']"<br><br>' +
+                '<input type="checkbox" value="0" name="is_correct[2][' + questions_count + ']"<br><br>' +
+                '<input type="checkbox" value="0" name="is_correct[3][' + questions_count + ']"<br><br>';
+            form.insertBefore(div, add);
+            questions_count++;
+            document.getElementById('questions-count').value = questions_count;
+        });
+    </script>
+{% endblock %}
+{% endblock %}
