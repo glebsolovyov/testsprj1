@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Tests, TrueAnswers
-from .utils import TestCreateMixin, TestSolutionMixin
+from django.views import View
+from .services import *
 
 
 def tests_list_view(request):
@@ -8,18 +9,27 @@ def tests_list_view(request):
     return render(request, 'tests/tests_list.html', context={'rows': rows})
 
 
-class TestCreate(TestCreateMixin):
-    model = Tests
+class TestCreate(View):
+    def get(self, request):
+        return render(request, 'tests/test_create.html')
+
+    def post(self, request):
+        Tests.objects.create(test_name=create_test(request)[0],
+                             questions=create_test(request)[1],
+                             questions_count=int(request.POST.get('questions-count')))
+
+        return redirect('tests_list_url')
 
 
-class TestSolution(TestSolutionMixin):
-    test_model = Tests
-    correct_answers_model = TrueAnswers
+class TestSolution(View):
+    def get(self, request):
+        return render(request, 'tests/test_solution.html', get_rows(request))
+
+    def post(self, request):
+        TrueAnswers.objects.create(true_answer=test_solution(request), test_id=request.GET.get('id'))
+        return redirect('tests_list_url')
 
 
 def check_test(request):
-    test = Tests.objects.get(id=request.GET.get('id'))
-    answ = TrueAnswers.objects.get(id=request.GET.get('id'))
-    dictt = {'test': test.test_name, 'answers': f'{len(answ.true_answer)}/ {test.questions_count}'}
-    return render(request, 'tests/check_test.html', context=dictt)
 
+    return render(request, 'tests/check_test.html', get_ctx_for_check_test(request))
