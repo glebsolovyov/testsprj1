@@ -6,7 +6,13 @@ from .services import *
 
 def tests_list_view(request):
     rows = Tests.objects.all()
-    return render(request, 'tests/tests_list.html', context={'rows': rows})
+    dictionary = dict()
+    for i in range(len(rows)):
+        if TrueAnswers.objects.filter(test_id=rows[i].id).count():
+            dictionary[i] = True
+        else:
+            dictionary[i] = False
+    return render(request, 'tests/tests_list.html', context={'rows': rows, 'dictionary': dictionary})
 
 
 class TestCreate(View):

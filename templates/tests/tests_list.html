@@ -1,15 +1,39 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}
     Tests list
 {% endblock %}
 
 {% block content %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Дата создания</th>
+            <th scope="col">Наименование</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            <tr class="table-active">
+                <th scope="row">{{ row.date_create }}</th>
+                <td>{{ row.test_name }}</td>
+                <td>{% for k, v in dictionary.items %}
+                    {% if row.id == k %}
+                        <img src="{% static 'images/yes.png'%}" alt="yes" width="25px" height="25px">
+                    {% endif %}
 
-    {% for row in rows %}
-        <a href="{% url 'test_solution_url' %}?id={{ row.id }}">Решить</a>
-        <a href="{% url 'check_test' %}?id={{ row.id }}">Результаты</a>
-        {{ row.test_name }}
-        {{ answ.correct_user_answers }}
-    {% endfor %}
+                    {% endfor %}
+                </td>
+                <td>Column content</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'test_solution_url' %}?id={{ row.id }}">Решить</a>
+    <a href="{% url 'check_test' %}?id={{ row.id }}">Результаты</a>
+
 
 {% endblock %}
